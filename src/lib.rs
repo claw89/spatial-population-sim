@@ -388,7 +388,7 @@ impl Population {
                 .cloned()
                 .collect::<Vec<f64>>()
                 .chunks(heatmap_bins + 2)
-                .map(|c| (c.to_vec()[1..heatmap_bins]).to_vec())
+                .map(|c| (c.to_vec()[1..(heatmap_bins + 1)]).to_vec())
                 .enumerate()
                 .filter(|(idx, _)| *idx != 0 && *idx != heatmap_bins)
                 .map(|(_, v)| v)
