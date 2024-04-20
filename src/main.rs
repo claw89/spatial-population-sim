@@ -18,6 +18,9 @@ struct Args {
     #[arg(short, long)]
     data_path: String,
 
+    #[arg(short, long)]
+    param_path: String,
+
     #[arg(short, long, default_value_t = 1)]
     runs: u64,
 
@@ -25,8 +28,8 @@ struct Args {
     species_ids: Vec<usize>,
 }
 
-fn load_species_array(species_ids: Vec<usize>) -> Vec<Species> {
-    let mut rdr = csv::Reader::from_path("data/species_params.csv").unwrap();
+fn load_species_array(species_ids: Vec<usize>, species_param_path: String) -> Vec<Species> {
+    let mut rdr = csv::Reader::from_path(species_param_path).unwrap();
     let species_array = Array::from_iter(rdr.deserialize::<Species>().map(|x| -> Species {
         let mut species = x.unwrap();
         species.derive_norms();
@@ -48,7 +51,7 @@ fn create_sim_dir(data_path: String) -> PathBuf {
 
 fn main() {
     let args = Args::parse();
-    let species_array = load_species_array(args.species_ids);
+    let species_array = load_species_array(args.species_ids, args.param_path);
     let sim_path = create_sim_dir(args.data_path);
 
     let multi_bar = MultiProgress::new();
