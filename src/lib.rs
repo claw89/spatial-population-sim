@@ -1,4 +1,4 @@
-use indicatif::ProgressBar;
+use indicatif::{MultiProgress, ProgressBar};
 use itertools::Itertools;
 use ndarray::{s, Array, Array3};
 use ndarray_npy::write_npy;
@@ -475,9 +475,15 @@ impl Population {
         self.t += delta_t;
     }
 
-    pub fn simulate(&mut self, max_t: f64, data_path: PathBuf, heatmap_bins: usize) {
+    pub fn simulate(
+        &mut self,
+        max_t: f64,
+        data_path: PathBuf,
+        heatmap_bins: usize,
+        multi_bar: &MultiProgress,
+    ) {
         // somulate the behaviour of the population over time
-        let prog = ProgressBar::new((max_t - 1.0) as u64);
+        let prog = multi_bar.add(ProgressBar::new((max_t - 1.0) as u64));
 
         self.compute_initial_distances();
         while self.t < max_t {
